@@ -1,0 +1,191 @@
+//Employee.java
+
+package com.cg.eis.bean;
+
+import com.cg.eis.exception.EmployeeException;
+
+public class Employee {
+
+    public String name;
+    double salary;
+    String id;
+    String Designation;
+    public String InsuranceScheme;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(double salary) {
+        this.salary = salary;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getDesignation() {
+        return Designation;
+    }
+
+    public void setDesignation(String designation) {
+        Designation = designation;
+    }
+
+    public Employee() {
+
+    }
+
+    public Employee(String name, double salary, String id, String Designation) throws EmployeeException {
+        this.name = name;
+        this.salary = salary;
+        this.id = id;
+        this.Designation = Designation;
+        InsuranceScheme = getInsuranceScheme(salary);
+        
+    }
+
+    private String getInsuranceScheme(double salary) {
+        // Write your code here
+        // should return the schemes as schemen a, scheme b, scheme c, no scheme
+        // , null or raise an exception.
+        String is = "";
+        
+        if (salary > 5000 && salary < 20000) {
+//          Designation = "System Associate";
+            is = "scheme c";
+        } else if (salary >= 20000 && salary < 40000) {
+//          Designation = "Programmer";
+            is = "scheme b";
+        } else if (salary >= 40000) {
+//          Designation = "Manager";
+            is = "scheme a";
+        } else if (salary < 5000 && salary >= 3000) {
+//          Designation = "Clerk";
+            is = "no scheme";
+        }
+        else if (salary < 3000) {
+            
+                try {
+                    throw new EmployeeException("Salary Exception");
+                } catch (EmployeeException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        return is;
+    }
+
+    public String getEmployeeDetails() {
+        // Write your code here
+        // Should return a String in the below format
+        // Name: name Id: id Salary: salary Designation: Designation
+        // InsuranceScheme: InsuranceScheme
+
+        return "Name: " + name + " Id: " + id + " Salary: " + salary
+                + " Designation: " + Designation + " InsuranceScheme: "
+                + InsuranceScheme;
+    }
+}
+
+//Exception
+package com.cg.eis.exception;
+
+@SuppressWarnings("serial")
+public class EmployeeException extends Exception{
+
+    public EmployeeException(String string) {
+        super(string);
+    }    
+}
+//GenerateOutputpackage com.cg.eis.pl;
+
+import com.cg.eis.bean.Employee;
+import com.cg.eis.exception.EmployeeException;
+import com.cg.eis.service.Service;
+
+//import java.util.Scanner;
+
+public class GenerateOutput {
+  //write your code here
+    
+//  static Scanner sc= new Scanner(System.in);
+//  
+//  static String sname = sc.nextLine();
+//  static double ssal = sc.nextDouble();
+//  static String sid = sc.nextLine();
+//  static String sdesignation = sc.nextLine();
+    
+    
+    
+    public static void main(String args[]) throws EmployeeException{
+        
+        Service s = new Service();
+        @SuppressWarnings("unused")
+        Employee e = new Employee();
+        Employee se2 = new Employee("Vamshi", 6500, "KJB55", "Analyst");
+        int EmployeeScheme = s.maxMedicalInsurance(se2);
+        String EmployeeDetails = se2.getEmployeeDetails();
+        
+        System.out.println(EmployeeDetails);
+        System.out.println("Max medical Insurance: "+ EmployeeScheme);
+    }
+}
+//Service
+package com.cg.eis.service;
+
+import com.cg.eis.bean.Employee;
+//import com.cg.eis.exception.EmployeeException;
+
+interface EmployeeService {
+  //Write your code here
+    int SchemeCBal = 1000;
+    int SchemeBBal = 5000;
+    int SchemeABal = 15000;
+    
+    public int maxMedicalInsurance(Employee e1);
+}
+
+
+public class Service implements EmployeeService {
+    
+//  Employee e = new Employee();
+    
+    public Service(){
+        
+    }
+//  public Service(String name, double salary, String id, String Designation){
+//      e.setName(name);
+//      e.setSalary(salary);
+//      e.setId(id);
+//      e.setDesignation(Designation);      
+//  }
+    
+    @Override
+    public int maxMedicalInsurance(Employee e1) {
+        if(e1.InsuranceScheme == "scheme a"){
+            return SchemeABal;
+        }
+        else if(e1.InsuranceScheme == "scheme b"){
+            return SchemeBBal;
+        }
+        else if(e1.InsuranceScheme == "scheme c"){
+            return SchemeBBal;
+        }
+        else {
+            return 0;
+        }
+    }
+}

@@ -1,0 +1,134 @@
+DESCRIPTION
+Case Study: Bank Account Management System
+Funds Bank needs an application to feed new account holder information. AccountHolder will be a person. There are two types of accounts such as SavingsAccount, CurrentAccount.
+?
+?
+
+Refer the below given case study and do the following operations:
+Create Account class as shown in the class diagram. 
+Ensure that the minimum balance of INR 500 in a bank account is available.
+Generate toString() method.
+Following definitions should be used in the Account class:
+  public void deposit(double rupees) {
+    // Set the balance of the account after the money is deposited to the account
+  }
+
+  public void withdraw(double rupees) {
+   // Set the balance of the account after the money is withdrawn from the account
+  }
+
+  public String toString() {
+    // Should return the string in the format:
+    // Name: TempName Age: 68.0 AccNumber: 1333339438704 Balance= 899.0
+  }
+
+  public double getBalance() {
+    // Should return the balance present in the Account
+  }
+  
+  public void setBalance(double bal){
+    // Set the balance for the account holder
+  }  
+
+  public void setAccountDetails(String name, float age, double balance) {
+    // Set the account details for the account holder
+  }
+  
+  public Person getPerson(){
+    // return the AccountHolder
+  }
+
+
+
+
+code
+
+
+
+class Person {
+   private String name;
+    private float age;
+    public String getName() {
+    return name;
+}
+ Person()
+ {
+     
+ }
+ Person(String name, float age)
+ {
+     this.name=name;
+     this.age=age;
+     //System.out.println(this.name);
+     
+ }
+ public void setName(String name) {
+     this.name=name;
+ }
+ public float getAge() {
+     return age;
+ }
+ 
+ public void setAge(float age) {
+     this.age=age;
+ }
+}
+
+class Account {
+    long accNum=1;
+    public long getAccNum(){
+        return accNum;
+    }
+    public void setAccNum(long accNum) {
+        this.accNum=accNum;
+    }
+    private double balance;
+    private Person accHolder= new Person();
+    Account(String name,float age,double balance)
+    {
+        this.balance=balance;
+        getPerson().setAge(age);
+        getPerson().setName(name);
+    }
+    public void deposit(double rupees) {
+        //set the balanceof the account 
+        this.balance=this.balance+rupees;
+            }
+    public void withdraw(double rupees)
+    {
+    if(balance-rupees>=500)
+    {
+        this.balance=this.balance-rupees;
+            }
+    
+}
+public String toString() {
+    return "Name: "+accHolder.getName()+" Age: "+accHolder.getAge()+" AccNumber: "+this.accNum+" Balance: "+this.balance;
+
+}
+public double getBalance()
+{
+    return this.balance;
+    }
+public void setBalance(double bal)
+{
+    if(bal>500)
+        this.balance=bal;
+}
+
+public void setAccountDetails(String name, int age, int balance)
+{
+    accHolder.setName(name);
+    accHolder.setAge(age);
+    this.balance=balance;
+    }
+public Person getPerson()
+{
+    return accHolder;
+    }
+public static void main(String args[])
+{
+    Account a=new Account("TempName",12,3000);
+    System.out.println(a);
+    }
+}

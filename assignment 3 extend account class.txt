@@ -1,0 +1,73 @@
+DESCRIPTION
+Read the following description and extend the functionality through inheritance and polymorphism (Maintenance).
+Inherit two classes Savings Account and Current Account from Account class. 
+class Account {
+  double balance;
+  boolean withdraw(double bal){
+    this.balance = this.balance - bal;
+    return true;
+  }
+}
+Implement the following in the respective classes:
+SavingsAccount 
+Add a variable called minimum Balance and assign final modifier.
+Assume minBalance = 500.
+Override method called withdraw (This method should check for minimum balance, allow withdraw to happen and returns a boolean value accordingly).
+CurrentAccount
+Add a variable called overdraft Limit.
+Assume OverDraftLimit = -2000.
+Override method called withdraw (checks whether overdraft limit is reached, allow withdraw to happen and returns a boolean value accordingly).
+
+
+code
+
+
+
+
+class Account
+{
+    double balance;
+        boolean withdraw(double bal)
+        {
+            this.balance=this.balance-bal;
+            return true;
+        }        
+
+    }    
+class SavingAccount extends Account
+{
+    SavingAccount(int b)
+    {
+        this.balance=b;
+    }
+    final int minBalance=500;
+    boolean withdraw(double bal)
+    {
+        if(this.balance-bal>=minBalance)
+        {
+            this.balance=this.balance-bal;
+            return true;
+        }
+        else 
+        return false;
+    }
+}
+class CurrentAccount extends Account
+{
+    CurrentAccount(int b)
+    {
+        this.balance=b;
+    }
+    int overDraftLimit=-2000;
+    boolean withdraw(double bal)
+    {
+        if(this.balance-bal>=overDraftLimit)
+        {
+            this.balance=this.balance-bal;
+            return true;
+            
+        }
+        else
+        return false;
+    }
+}
