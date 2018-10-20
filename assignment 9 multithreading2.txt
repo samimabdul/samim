@@ -1,115 +1,155 @@
-ReaderThread.java
-import java.io.BufferedReader;
+DESCRIPTION
+You have to create two threads.
+One thread will read one line from "input.txt" and the other thread will will write the same line on "output.txt". 
+This has to be continued till the whole "input.txt" is copied.
+
+Note: 
+The file "output.txt" has to be created on runtime.
+The file "input.txt" will be created beforehand by the evaluation script and the file will  only have small case alphabets. There will be at most 100 alphabets and 10 lines in the file.
+
+We expect you to use Blocking Queues in order to solve this problem. It has been initialized in the evaluation script:
+BlockingQueue<String> queue = new ArrayBlockingQueue<String>(1024);
+
+The thread class which reads from the "input.txt" file has to be named
+ReaderThread and the thread class which writes to  "output.txt" has to be named WriterThread.
+
+Note:  Some part of code has already been written in the code stub, you just have to complete the remaining part in order to solve the problem.
+
+EXECUTION TIME LIMIT
+Default.
+/Assignment9
+//WriterThread
+package assignment9;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+
+
+public class Writer implements Runnable {
+    
+    
+    BlockingQueue<String> qw = new ArrayBlockingQueue<String>(1024);
+    
+    public Writer(BlockingQueue<String> queue) {
+        // TODO Auto-generated constructor stub
+        this.qw = queue;
+    }
+
+    @Override
+    public void run() {
+        // TODO Auto-generated method stub
+        FileWriter fw = null;
+        try {
+            fw = new FileWriter(new File("outputt.txt"));
+            while(true){
+                String s = qw.take();
+                if(s.equals("END"))
+                    break;
+                fw.write(s);
+            }
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        finally{
+            try {
+                System.out.println("File copied from queue...");
+                fw.close();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        
+        
+    }
+
+}
+//ReaderThread
+package assignment9;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.concurrent.BlockingQueue;
-
-public class ReaderThread implements Runnable{
-
-  protected BlockingQueue<String> blockingQueue = null;
-
-  public ReaderThread(BlockingQueue<String> blockingQueue){
-    this.blockingQueue = blockingQueue;     
-  }
-
-  @Override
-  public void run() {
-    BufferedReader br = null;
-     try {
-            br = new BufferedReader(new FileReader(new File("input.txt")));
-            String buffer =null;
-            while((buffer=br.readLine())!=null){
-                blockingQueue.put(buffer);
-            }
-            blockingQueue.put("EOF");  //When end of file has been reached
-
-        } catch (FileNotFoundException e) {
-
-            e.printStackTrace();
-        } catch (IOException e) {
-
-            e.printStackTrace();
-        } catch(InterruptedException e){
-
-        }finally{
-            try {
-                br.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-  }
-}
-
-
-Luncher.java
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-public class Luncher {
 
-  public static void main(String[] args) {
+public class Reader implements Runnable {
 
-    BlockingQueue<String> queue = new ArrayBlockingQueue<String>(1024);
+    BlockingQueue<String> qr = new ArrayBlockingQueue<String>(1024);
 
-    ReaderThread reader = new ReaderThread(queue);
-    WriterThread writer = new WriterThread(queue);
+    public Reader(BlockingQueue<String> queue) {
+        // TODO Auto-generated constructor stub
+        this.qr = queue;
+    }
 
-    new Thread(reader).start();
-    new Thread(writer).start();
-
-  }
-
- }
- 
- 
- WriterThread.java
- import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.util.concurrent.BlockingQueue;
-
-public class WriterThread implements Runnable{
-
-  protected BlockingQueue<String> blockingQueue = null;
-
-  public WriterThread(BlockingQueue<String> blockingQueue){
-    this.blockingQueue = blockingQueue;     
-  }
-
-  @Override
-  public void run() {
-    PrintWriter writer = null;
-
-    try {
-        writer = new PrintWriter(new File("outputFile.txt"));
-
-        while(true){
-            String buffer = blockingQueue.take();
-            //Check whether end of file has been reached
-            if(buffer.equals("EOF")){ 
-                break;
+    @Override
+    public void run() {
+        // TODO Auto-generated method stub
+        
+        FileReader fr = null;
+        try {
+            fr = new FileReader(new File("input.txt"));
+            
+            int i;
+            while((i = fr.read()) != -1){
+                char c = (char)i;
+                String s = Character.toString(c);
+                qr.put(s);
             }
-            writer.println(buffer);
-        }               
+            qr.put("END");
 
+            System.out.println("File copied into queue...");
+//          System.out.println(q);
+            fr.close();
+                
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-    } catch (FileNotFoundException e) {
-
-        e.printStackTrace();
-    } catch(InterruptedException e){
-
-    }finally{
-        writer.close();
-    } 
-
-  }
+    }
 
 }
+//Main
+package assignment9;
 
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
-input.txt
-aaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbccccccccccccccccccccccccccccccccccccccccc
-dddddddddddddddddddddddeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeefffffffffffffffffffffffffffffffffffff
+public class MainMethod {
+
+    public static void main(String[] args) throws InterruptedException {
+        // TODO Auto-generated method stub
+        
+        BlockingQueue<String> queue = new ArrayBlockingQueue<String>(1024);
+        
+        Reader rt = new Reader(queue);
+        Thread t1 = new Thread(rt);
+        Writer wt = new Writer(queue);
+        Thread t2 = new Thread(wt);
+        
+        t1.start();
+//      System.out.println(queue);
+        t2.start();
+    }
+
+}
